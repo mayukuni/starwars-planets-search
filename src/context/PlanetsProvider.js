@@ -1,10 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import PlanetsContext from './PlanetsContext';
-// import fetchApi from '../services/api';
 
-function Provider({ children }) {
+const Provider = ({ children }) => {
   const [data, setData] = useState([]);
+  const [filter, setFilter] = useState({
+    filters: {
+      filterByName: {
+        name: '',
+      },
+      filterByNumericValues: [
+        {
+          column: 'population',
+          comparison: 'maior que',
+          value: '100000',
+        },
+      ],
+    },
+  });
+
+  const contextValue = {
+    data,
+    setData,
+    filter,
+    setFilter,
+  };
 
   useEffect(() => {
     async function fetchApi() {
@@ -19,11 +39,11 @@ function Provider({ children }) {
   }, []);
 
   return (
-    <PlanetsContext.Provider value={ { data } }>
+    <PlanetsContext.Provider value={ contextValue }>
       { children }
     </PlanetsContext.Provider>
   );
-}
+};
 
 Provider.propTypes = {
   children: PropTypes.node,

@@ -4,9 +4,17 @@ import PlanetsContext from '../context/PlanetsContext';
 // requisito 2 feito com base no código da revisão
 // https://github.com/tryber/sd-013-b-revisao-music-table
 function Table() {
-  const { data } = useContext(PlanetsContext);
+  const { data, filter, setFilter } = useContext(PlanetsContext);
   console.log(data);
   const [filterName, setFilterName] = useState('');
+  const [column, setColumn] = useState('population');
+  const [comparison, setComparison] = useState('maior que');
+  const [value, setValue] = useState('0');
+
+  // useEffect(() => {
+  //   setFilterName(filterName);
+  // }, [filterName, setFilterName]);
+
   return (
     <>
       <input
@@ -14,6 +22,49 @@ function Table() {
         data-testid="name-filter"
         onChange={ (event) => setFilterName(event.target.value) }
       />
+      <select
+        data-testid="column-filter"
+        onChange={ (event) => setColumn(event.target.value) }
+      >
+        <option value="population">population</option>
+        <option value="orbital_period">orbital_period</option>
+        <option value="diameter">diameter</option>
+        <option value="rotation_period">rotation_period</option>
+        <option value="surface_water">surface_water</option>
+      </select>
+      <select
+        data-testid="comparison-filter"
+        onChange={ (event) => setComparison(event.target.value) }
+      >
+        <option value="maior que">maior que</option>
+        <option value="menor que">menor que</option>
+        <option value="igual a">igual a</option>
+      </select>
+      <input
+        type="number"
+        data-testid="value-filter"
+        onChange={ (event) => setValue(event.target.value) }
+      />
+      <button
+        type="button"
+        data-testid="button-filter"
+        onClick={ () => {
+          setFilter({
+            filters: {
+              ...filter.filters,
+              filterByNumericValues: [
+                {
+                  column,
+                  comparison,
+                  value,
+                },
+              ],
+            },
+          });
+        } }
+      >
+        filtrar
+      </button>
       <table>
         <thead>
           <tr>
@@ -34,6 +85,18 @@ function Table() {
         </thead>
         <tbody>
           { data
+            .filter((planet) => {
+              const values = filter.filters.filterByNumericValues[0];
+              let filteredResult = [];
+              console.log(values);
+              if (values.comparison === 'maior que') {
+                filteredResult = Number(planet[values.column]) > Number(values.value);
+              } else if (values.comparison === 'menor que') {
+                filteredResult = Number(planet[values.column]) < Number(values.value);
+              } else if (values.comparison === 'igual a') {
+                filteredResult = Number(planet[values.column]) === Number(values.value);
+              } return filteredResult;
+            })
             .filter((planet) => planet.name.toLowerCase().includes(
               filterName.toLowerCase(),
             ))

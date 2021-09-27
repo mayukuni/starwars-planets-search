@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import PlanetsProvider from './context/PlanetsProvider';
 import Table from './components/Table';
+// import Filter from './components/Filter';
 
 // const PlanetsContext = createContext();
 
@@ -21,6 +22,7 @@ function App() {
   return (
     <div>
       <PlanetsProvider>
+        {/* <Filter /> */}
         <Table />
       </PlanetsProvider>
     </div>
