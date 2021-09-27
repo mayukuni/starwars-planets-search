@@ -10,6 +10,26 @@ function Table() {
   const [column, setColumn] = useState('population');
   const [comparison, setComparison] = useState('maior que');
   const [value, setValue] = useState('0');
+  const [newOptions, setNewOptions] = useState([
+    'population',
+    'orbital_period',
+    'diameter',
+    'rotation_period',
+    'surface_water',
+  ]);
+  // const columnsArray = [
+  //   'population',
+  //   'orbital_period',
+  //   'diameter',
+  //   'rotation_period',
+  //   'surface_water',
+  // ];
+
+  function createNewColumn(oldColumn) {
+    const newColumn = [...newOptions];
+    newColumn.splice(newColumn.indexOf(oldColumn), 1);
+    setNewOptions(newColumn);
+  }
 
   // useEffect(() => {
   //   setFilterName(filterName);
@@ -26,11 +46,9 @@ function Table() {
         data-testid="column-filter"
         onChange={ (event) => setColumn(event.target.value) }
       >
-        <option value="population">population</option>
-        <option value="orbital_period">orbital_period</option>
-        <option value="diameter">diameter</option>
-        <option value="rotation_period">rotation_period</option>
-        <option value="surface_water">surface_water</option>
+        { newOptions.map((option) => (
+          <option key={ option } value={ option }>{ option }</option>
+        )) }
       </select>
       <select
         data-testid="comparison-filter"
@@ -61,6 +79,7 @@ function Table() {
               ],
             },
           });
+          createNewColumn(column);
         } }
       >
         filtrar
